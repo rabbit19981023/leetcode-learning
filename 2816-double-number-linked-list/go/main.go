@@ -6,42 +6,27 @@ type ListNode struct {
 }
 
 func doubleListNode(head *ListNode) *ListNode {
-	reversed := reverseList(head)
-
-	curr := reversed
-	carry := 0
-
-	for curr != nil {
-		newVal := curr.Val*2 + carry
-		curr.Val = newVal % 10
-		carry = newVal / 10
-
-		if curr.Next == nil {
-			break
-		}
-
-		curr = curr.Next
-	}
+	carry := doubleFromTail(head)
 
 	if carry > 0 {
-		curr.Next = &ListNode{Val: carry}
+		newHead := &ListNode{Val: carry}
+		newHead.Next = head
+
+		return newHead
 	}
 
-	return reverseList(reversed)
+	return head
 }
 
-func reverseList(head *ListNode) *ListNode {
-	var prev *ListNode
-	curr := head
-
-	for curr != nil {
-		next := curr.Next
-
-		curr.Next = prev
-		prev = curr
-
-		curr = next
+func doubleFromTail(node *ListNode) int {
+	if node == nil {
+		return 0
 	}
 
-	return prev
+	carry := doubleFromTail(node.Next)
+
+	newVal := node.Val*2 + carry
+	node.Val = newVal % 10
+
+	return newVal / 10
 }
